@@ -1,7 +1,7 @@
 import Foundation
 import SWXMLHash
 
-struct SWXMLChannelAddressor {
+public struct SWXMLChannelAddressor {
 	
 	//MARK: Properties
 	internal let indexer: XMLIndexer
@@ -58,7 +58,7 @@ struct SWXMLChannelAddressor {
 	}
 }
 
-struct SWXMLItemAddressor {
+public struct SWXMLItemAddressor {
 	
 	//MARK: Properties
 	internal let indexer: XMLIndexer

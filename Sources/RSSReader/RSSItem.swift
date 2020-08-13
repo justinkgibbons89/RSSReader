@@ -1,37 +1,37 @@
 import Foundation
 
-struct RSSItemDescription {
+public struct RSSItemDescription {
 
 	//MARK: Properties
 	/// The title of this item.
-	var title: String?
+	public var title: String?
 	
 	/// This item's link.
-	var link: String?
+	public var link: String?
 	
 	/// The author of this item.
-	var dcCreator: String?
+	public var dcCreator: String?
 	
 	/// The publication date of the item, as a `String`.
-	var pubDateRaw: String?
+	public var pubDateRaw: String?
 	
 	/// The categories associated with this item.
-	var categories: [String] = []
+	public var categories: [String] = []
 	
-	var guid: String?
-	var guidIsPermalink: Bool?
+	public var guid: String?
+	public var guidIsPermalink: Bool?
 	
 	/// The description of this item.
-	var description: String?
+	public var description: String?
 	
 	/// The content of the item.
-	var content: String?
+	public var content: String?
 	
 	/// The URL of this item's comments.
-	var comments: String?
+	public var comments: String?
 	
 	/// The publication date of the item, as a `Date` object.
-	var pubDate: Date? {
+	public var pubDate: Date? {
 		Date.from(pubDateRaw, format: .simple)
 	}
 }
@@ -41,7 +41,7 @@ extension RSSItemDescription {
 	//MARK: Initialization
 	/// Initializes an `RSSItemDescription` from  a `SWXMLItemAddressor`.
 	/// - Parameter addressor: The addressor used to decode the channel.
-	init(addressor: SWXMLItemAddressor) {
+	public init(addressor: SWXMLItemAddressor) {
 		self.title = addressor.title
 		self.link = addressor.link
 		self.dcCreator = addressor.dcCreator

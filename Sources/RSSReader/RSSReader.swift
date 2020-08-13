@@ -12,19 +12,18 @@ public class Reader {
 	private var cancellables = [AnyCancellable]()
 	
 	//MARK: Methods
-	public func read(feed feedPath: String) {
-		Networking().publisher(for: feedPath)?
-			.sink(receiveCompletion: { _ in }) { result in
-				self.parse(data: result.data)
-		}
-		.store(in: &cancellables)
+	public func channel(from feed: String, completion: @escaping (RSSChannelDescription) -> ()) {
+
+		Networking().publisher(for: feed)?
+			.map { result in self.parse(data: result.data) }
+			.catch { (failure) in Just(RSSChannelDescription()) }
+			.sink { channel in completion(channel) }
+			.store(in: &cancellables)
+		
 	}
 	
-	func parse(data: Data) {
-		let channel = RSSChannelDescription(data: data)
-		print(channel.title ?? "no title")
-		print("\(channel.items[0].pubDate as Any)")
-		print(channel.items[0].guidIsPermalink as Any)
+	func parse(data: Data) -> RSSChannelDescription {
+		RSSChannelDescription(data: data)
 	}
 	
 }

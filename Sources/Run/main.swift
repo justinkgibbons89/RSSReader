@@ -11,8 +11,10 @@ class App {
 	}
 	
 	private func operations() {
-		let reader = Reader()
-		reader.read(feed: "http://feeds.feedburner.com/marginalrevolution/feed")
+		Reader().channel(from: "http://feeds.feedburner.com/marginalrevolution/feed") { channel in
+			print(channel.title ?? "no title")
+			print(channel.aggregateCategories)
+		}
 	}
 }
 

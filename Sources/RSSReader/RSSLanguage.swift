@@ -1,6 +1,6 @@
 import Foundation
 
-enum RSSLanguage {
+public enum RSSLanguage {
 	
 	case english
 	case unknown
