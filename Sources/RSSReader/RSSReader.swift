@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 
 @available(OSX 10.15, *)
 public class Reader {
@@ -9,7 +8,6 @@ public class Reader {
 	
 	//MARK: Properties
 	private let networking = Networking()
-	private var cancellables = [AnyCancellable]()
 	
 	//MARK: Methods
 	public func channel(from feed: String, completion: @escaping (RSSChannelDescription) -> ()) {
