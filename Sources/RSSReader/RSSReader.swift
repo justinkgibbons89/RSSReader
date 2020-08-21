@@ -14,12 +14,10 @@ public class Reader {
 	//MARK: Methods
 	public func channel(from feed: String, completion: @escaping (RSSChannelDescription) -> ()) {
 
-		Networking().publisher(for: feed)?
-			.map { result in self.parse(data: result.data) }
-			.catch { (failure) in Just(RSSChannelDescription()) }
-			.sink { channel in completion(channel) }
-			.store(in: &cancellables)
-		
+		Networking().download(path: feed) { data in 
+			let channel = self.parse(data: data)
+			completion(channel)
+		}
 	}
 	
 	func parse(data: Data) -> RSSChannelDescription {

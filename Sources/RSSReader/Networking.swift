@@ -29,6 +29,7 @@ public class Networking {
 		task.resume()
 	}
 	
+	#if os(iOS)
 	@available(OSX 10.15, *)
 	func publisher(for path: String) -> URLSession.DataTaskPublisher? {
 		guard let url = URL(string: path) else {
@@ -37,4 +38,5 @@ public class Networking {
 		
 		return session.dataTaskPublisher(for: url)
 	}
+	#endif
 }
