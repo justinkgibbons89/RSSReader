@@ -38,6 +38,17 @@ public struct RSSChannelDescription {
 	public var aggregateCategories: [String] = []
 	public var generator: String?
 	
+	/// A description of the categories associated with the channel, concatenated into a single string.
+	public var categoriesDescription: String {
+		aggregateCategories.reduce(into: String()) { (concatenated, category) in
+			if concatenated.isEmpty {
+				concatenated += category
+			} else {
+				concatenated += "," + category				
+			}
+		}
+	}
+	
 	/// The items associated with this channel.
 	public var items: [RSSItemDescription] = []
 }

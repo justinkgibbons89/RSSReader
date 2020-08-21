@@ -13,7 +13,7 @@ class App {
 	private func operations() {
 		Reader().channel(from: "http://feeds.feedburner.com/marginalrevolution/feed") { channel in
 			print(channel.title ?? "no title")
-			print(channel.aggregateCategories)
+			print(channel.categoriesDescription)
 		}
 	}
 }
