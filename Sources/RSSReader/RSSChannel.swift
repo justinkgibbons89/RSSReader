@@ -44,7 +44,7 @@ public struct RSSChannelDescription {
 			if concatenated.isEmpty {
 				concatenated += category
 			} else {
-				concatenated += "," + category				
+				concatenated += "," + category
 			}
 		}
 	}
@@ -65,7 +65,12 @@ extension RSSChannelDescription {
 		self.languageRaw = addressor.language
 		self.lastBuildDateRaw = addressor.lastBuildDate
 		self.atom = addressor.atom
-		self.aggregateCategories = addressor.categories
+		
+		/// Filter and assign categories
+		var uniquedCategories = addressor.categories.unique(by: \.self) /// remove duplicates
+		uniquedCategories.removeAll { category in category == "Uncategorized" } /// remove superfluous categories
+		self.aggregateCategories = uniquedCategories
+		
 		self.generator = addressor.generator
 		
 		items = addressor.itemAddressors.map { itemAddressor in
@@ -77,5 +82,21 @@ extension RSSChannelDescription {
 		let xml = SWXMLHash.parse(data)
 		let addressor = SWXMLChannelAddressor(indexer: xml)
 		self.init(addressor: addressor)
+	}
+}
+
+extension Array {
+	func unique(by description: KeyPath<Element, String>) -> [Element] {
+		var uniquer = [String: Int]()
+		let uniques = self.reduce(into: [Element]()) { uniqueElements, currentElement in
+			let attribute = currentElement[keyPath: description]
+			if uniquer[attribute] == nil {
+				uniquer[attribute] = 0
+				uniqueElements.append(currentElement)
+			} else {
+				uniquer[attribute]! += 1
+			}
+		}
+		return uniques
 	}
 }
