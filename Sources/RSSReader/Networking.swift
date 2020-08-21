@@ -1,5 +1,8 @@
 import Foundation
+
+#if os(iOS)
 import Combine
+#endif
 
 public class Networking {
 	
