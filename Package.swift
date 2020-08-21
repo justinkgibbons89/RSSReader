@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "RSSReader",
+    name: "rss-reader",
     products: [
         .library(
             name: "RSSReader",
