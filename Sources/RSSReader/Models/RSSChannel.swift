@@ -38,7 +38,7 @@ public struct RSSChannelDescription {
 	public var aggregateCategories: [String] = []
 	public var generator: String?
 	
-	/// A description of the categories associated with the channel, concatenated into a single string.
+	/// A description of the categories associated with the channel, concatenated into a string of comma-separated values.
 	public var categoriesDescription: String {
 		aggregateCategories.reduce(into: String()) { (concatenated, category) in
 			if concatenated.isEmpty {
@@ -82,21 +82,5 @@ extension RSSChannelDescription {
 		let xml = SWXMLHash.parse(data)
 		let addressor = SWXMLChannelAddressor(indexer: xml)
 		self.init(addressor: addressor)
-	}
-}
-
-extension Array {
-	func unique(by description: KeyPath<Element, String>) -> [Element] {
-		var uniquer = [String: Int]()
-		let uniques = self.reduce(into: [Element]()) { uniqueElements, currentElement in
-			let attribute = currentElement[keyPath: description]
-			if uniquer[attribute] == nil {
-				uniquer[attribute] = 0
-				uniqueElements.append(currentElement)
-			} else {
-				uniquer[attribute]! += 1
-			}
-		}
-		return uniques
 	}
 }
