@@ -13,6 +13,9 @@ public class Networking {
 	//MARK: Properties
 	private let session = URLSession.shared
 	
+	//MARK: Initializer
+	public init() {}
+	
 	//MARK: Methods
 	public func download(path: String, completion: @escaping (Data) -> ()) {
 		print("Downloading...")
