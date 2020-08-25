@@ -9,13 +9,15 @@ let package = Package(
             targets: ["RSSReader"]),
     ],
     dependencies: [
-		.package(url: "https://github.com/drmohundro/SWXMLHash.git", from: "5.0.1")
+		.package(url: "https://github.com/drmohundro/SWXMLHash.git", from: "5.0.1"),
+		.package(url: "https://github.com/apple/swift-nio.git", from: "2.21.0")
     ],
     targets: [
         .target(
             name: "RSSReader",
             dependencies: [
-				"SWXMLHash"
+				"SWXMLHash",
+				.product(name: "NIO", package: "swift-nio")
 			]),
 		.target(
 			name: "Run",

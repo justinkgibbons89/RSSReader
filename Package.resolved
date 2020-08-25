@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "cf6f2b1807219643270616e03de697b96c46384c",
+          "version": "2.21.0"
+        }
+      },
+      {
         "package": "SWXMLHash",
         "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
         "state": {
