@@ -5,10 +5,13 @@ import NIO
 public class Reader {
 	
 	//MARK: Initialization
-	public init() {}
+	public init(verbose: Bool = false) {
+		self.verbose = verbose
+	}
 	
 	//MARK: Properties
 	private let networking = Networking()
+	private var verbose: Bool
 	
 	//MARK: Methods
 	/// Downloads the XML from the given URL, parses it to an `RSSChannelDescription` and passes the result to a completion handler.
@@ -17,7 +20,10 @@ public class Reader {
 	///   - completion: The closure which receives the resultant channel.
 	public func channel(from feed: String, completion: @escaping (RSSChannelDescription) -> ()) {
 
-		Networking().download(path: feed) { data in 
+		Networking().download(path: feed) { data in
+			if self.verbose {
+				print("Download finished for \(feed)")
+			}
 			let channel = self.parse(data: data)
 			completion(channel)
 		}

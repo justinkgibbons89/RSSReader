@@ -23,7 +23,6 @@ public class Networking {
 	///   - path: The URL to be downloaded from.
 	///   - completion: The completion handler to receive the resulting data.
 	public func download(path: String, completion: @escaping (Data) -> ()) {
-		print("Downloading...")
 		
 		guard let url = URL(string: path) else {
 			print("Couldn't construct URL from path. Aborted."); return
@@ -60,7 +59,6 @@ public class Networking {
 		
 		
 		let task = session.dataTask(with: url) { (data, response, error) in
-			print("Data task finished.")
 			
 			if let error = error {
 				print("Data task error: \(error)")
