@@ -74,6 +74,22 @@ public class Networking {
 		return promise.futureResult
 	}
 	
+	/// Ask for multiple downloads asynchronously, returning a collection of data futures that will resolve independently.
+	/// - Parameters:
+	///   - urls: The URLs of the resources to download.
+	///   - eventLoop: The event loop to resolve the futures on.
+	/// - Returns: The data objects, as a collection of futures.
+	public func download(urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<Data>] {
+		var results: [EventLoopFuture<Data>] = []
+		
+		for url in urls {
+			let dataFuture = download(from: url, on: eventLoop)
+			results.append(dataFuture)
+		}
+		
+		return results
+	}
+	
 	#if os(iOS)
 	@available(OSX 10.15, *)
 	func publisher(for path: String) -> URLSession.DataTaskPublisher? {
