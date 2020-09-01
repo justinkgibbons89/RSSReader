@@ -46,6 +46,26 @@ public class Reader {
 		return promise.futureResult
 	}
 	
+	/// Downloads the XML from the given URLs asynchronously, maps the XML to `RSSChannelDescription` objects, and returns a collection of futures that resolve indepedently.
+	/// - Parameters:
+	///   - urls: The URLs of the resourcse to be downloaded and parsed.
+	///   - eventLoop: The event loop to resolve futures on.
+	/// - Returns: A collection of future channel descriptions.
+	public func channels(from urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<RSSChannelDescription>] {
+		let dataFutures = Networking().download(urls: urls, on: eventLoop)
+		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
+		
+		for future in dataFutures {
+			let channelFuture = future.map { (data) in
+				self.parse(data: data)
+			}
+			
+			channelFutures.append(channelFuture)
+		}
+		
+		return channelFutures
+	}
+	
 	/// Parses XML data into an `RSSChannelDescription`
 	/// - Parameter data: The channel as data.
 	/// - Returns: The channel as a rich object.
