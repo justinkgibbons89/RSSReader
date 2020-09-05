@@ -66,20 +66,25 @@ public class Reader {
 		return channelFutures
 	}
 	
-//	public func channels(from futureURLs: [EventLoopFuture<[String]>], on eventLoop: EventLoop) -> [EventLoopFuture<RSSChannelDescription>] {
-//		let dataFutures = Networking().download(urls: urls, on: eventLoop)
-//		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
-//
-//		for future in dataFutures {
-//			let channelFuture = future.map { (data) in
-//				self.parse(data: data)
-//			}
-//
-//			channelFutures.append(channelFuture)
-//		}
-//
-//		return channelFutures
-//	}
+	/// Asynchronously downloads XML files and parses them into `RSSChannelDescription` objects.
+	/// - Parameters:
+	///   - futureURLs: The URLs of the XML to be downloaded.
+	///   - eventLoop: The event loop to perform work on.
+	/// - Returns: A collection of RSS channel descriptions, as futures.
+	public func channels(from futureURLs: [EventLoopFuture<String>], on eventLoop: EventLoop) -> [EventLoopFuture<RSSChannelDescription>] {
+		let dataFutures = Networking().download(futureURLs, eventLoop: eventLoop)
+		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
+
+		for future in dataFutures {
+			let channelFuture = future.map { (data) in
+				self.parse(data: data)
+			}
+
+			channelFutures.append(channelFuture)
+		}
+
+		return channelFutures
+	}
 	
 	/// Parses XML data into an `RSSChannelDescription`
 	/// - Parameter data: The channel as data.
