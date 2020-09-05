@@ -90,6 +90,28 @@ public class Networking {
 		return results
 	}
 	
+	/// Asynchronously downloads the file from a given URL and returns it as `Data`.
+	/// - Parameters:
+	///   - futureURL: The URL to be downloaded.
+	///   - eventLoop: The event loop to perform work on.
+	/// - Returns: The data from the given URL, as a future.
+	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop) -> EventLoopFuture<Data> {
+		futureURL.flatMap { (url) in
+			self.download(from: url, on: eventLoop)
+		}
+	}
+	
+	/// Asynchronously downloads any files at the given URLs and returns them as a collection of `Data` objects.
+	/// - Parameters:
+	///   - futureURLs: The URLs to be downloaded.
+	///   - eventLoop: The event loop to perform work on.
+	/// - Returns: A collection of downloaded data, as futures.
+	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop) -> [EventLoopFuture<Data>] {
+		futureURLs.map { (futureURL) in
+			self.download(futureURL, eventLoop: eventLoop)
+		}
+	}
+	
 	#if os(iOS)
 	@available(OSX 10.15, *)
 	func publisher(for path: String) -> URLSession.DataTaskPublisher? {

@@ -66,6 +66,21 @@ public class Reader {
 		return channelFutures
 	}
 	
+//	public func channels(from futureURLs: [EventLoopFuture<[String]>], on eventLoop: EventLoop) -> [EventLoopFuture<RSSChannelDescription>] {
+//		let dataFutures = Networking().download(urls: urls, on: eventLoop)
+//		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
+//
+//		for future in dataFutures {
+//			let channelFuture = future.map { (data) in
+//				self.parse(data: data)
+//			}
+//
+//			channelFutures.append(channelFuture)
+//		}
+//
+//		return channelFutures
+//	}
+	
 	/// Parses XML data into an `RSSChannelDescription`
 	/// - Parameter data: The channel as data.
 	/// - Returns: The channel as a rich object.
