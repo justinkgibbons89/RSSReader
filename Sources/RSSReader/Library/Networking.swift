@@ -25,7 +25,7 @@ public class Networking {
 	public func download(path: String, completion: @escaping (Data) -> ()) {
 		
 		guard let url = URL(string: path) else {
-			print("Couldn't construct URL from path. Aborted."); return
+			print("Couldn't construct URL from path: \(path)"); return
 		}
 		
 		let task = session.dataTask(with: url) { (data, response, error) in
@@ -45,14 +45,14 @@ public class Networking {
 	
 	/// Downloads the data at the given URL and returns it as a future data object.
 	/// - Parameters:
-	///   - url: The URL to be downloaded from.
+	///   - path: The URL to be downloaded from.
 	///   - eventLoop: The event loop to create the underlying promise on.
 	/// - Returns: A future which resolves into the downloaded data, or an error.
-	public func download(from url: String, on eventLoop: EventLoop) -> EventLoopFuture<Data> {
+	public func download(from path: String, on eventLoop: EventLoop) -> EventLoopFuture<Data> {
 		let promise = eventLoop.makePromise(of: Data.self)
 		
-		guard let url = URL(string: url) else {
-			print("Couldn't construct URL from path. Aborted.");
+		guard let url = URL(string: path) else {
+			print("Couldn't construct URL from path: \(path)");
 			promise.completeWith(.failure(NetworkingError.unknown))
 			return promise.futureResult
 		}
