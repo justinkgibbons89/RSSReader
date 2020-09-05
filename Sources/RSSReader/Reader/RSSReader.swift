@@ -35,15 +35,10 @@ public class Reader {
 	///   - eventLoop: The event loop to make the promise on.
 	/// - Returns: A future that resolves to a channel or an error.
 	public func channel(from url: String, on eventLoop: EventLoop) -> EventLoopFuture<RSSChannelDescription> {
-		let promise = eventLoop.makePromise(of: RSSChannelDescription.self)
 		
-		Networking().download(path: url) { data in
-			let channel = self.parse(data: data)
-			
-			promise.completeWith(.success(channel))
+		Networking().download(from: url, on: eventLoop).map { (data) in
+			self.parse(data: data)
 		}
-		
-		return promise.futureResult
 	}
 	
 	/// Downloads the XML from the given URLs asynchronously, maps the XML to `RSSChannelDescription` objects, and returns a collection of futures that resolve indepedently.
