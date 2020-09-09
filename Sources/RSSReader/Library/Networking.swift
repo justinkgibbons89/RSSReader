@@ -43,13 +43,13 @@ public class Networking {
 		task.resume()
 	}
 	
-	/// Downloads the data at the given URL and returns it as a future data object.
+	/// Downloads the data at the given URL and returns it as a future `NetworkResult`.
 	/// - Parameters:
 	///   - path: The URL to be downloaded from.
 	///   - eventLoop: The event loop to create the underlying promise on.
 	/// - Returns: A future which resolves into the downloaded data, or an error.
-	public func download(from path: String, on eventLoop: EventLoop) -> EventLoopFuture<Data> {
-		let promise = eventLoop.makePromise(of: Data.self)
+	public func download(from path: String, on eventLoop: EventLoop) -> EventLoopFuture<NetworkResult> {
+		let promise = eventLoop.makePromise(of: NetworkResult.self)
 		
 		guard let url = URL(string: path) else {
 			print("Couldn't construct URL from path: \(path)");
@@ -66,11 +66,13 @@ public class Networking {
 			}
 			
 			if let data = data {
-				promise.completeWith(.success(data))
+				let result = NetworkResult(url: path, data: data, response: response)
+				promise.completeWith(.success(result))
 			}
 		}
 		
 		task.resume()
+		
 		return promise.futureResult
 	}
 	
@@ -79,35 +81,35 @@ public class Networking {
 	///   - urls: The URLs of the resources to download.
 	///   - eventLoop: The event loop to resolve the futures on.
 	/// - Returns: The data objects, as a collection of futures.
-	public func download(urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<Data>] {
-		var results: [EventLoopFuture<Data>] = []
+	public func download(urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
+		var results: [EventLoopFuture<NetworkResult>] = []
 		
 		for url in urls {
-			let dataFuture = download(from: url, on: eventLoop)
-			results.append(dataFuture)
+			let request = download(from: url, on: eventLoop)
+			results.append(request)
 		}
 		
 		return results
 	}
 	
-	/// Asynchronously downloads the file from a given URL and returns it as `Data`.
+	/// Asynchronously downloads the file from a given URL and returns it as a `NetworkResult`.
 	/// - Parameters:
 	///   - futureURL: The URL to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: The data from the given URL, as a future.
-	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop) -> EventLoopFuture<Data> {
+	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop) -> EventLoopFuture<NetworkResult> {
 		futureURL.flatMap { (url) in
 			self.download(from: url, on: eventLoop)
 		}
 	}
 	
-	/// Asynchronously downloads any files at the given URLs and returns them as a collection of `Data` objects.
+	/// Asynchronously downloads any files at the given URLs and returns them as a collection of `NetworkResult` objects.
 	/// - Parameters:
 	///   - futureURLs: The URLs to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: A collection of downloaded data, as futures.
-	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop) -> [EventLoopFuture<Data>] {
-		futureURLs.map { (futureURL) in
+	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
+		futureURLs.map { (futureURL) -> EventLoopFuture<NetworkResult> in
 			self.download(futureURL, eventLoop: eventLoop)
 		}
 	}

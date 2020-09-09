@@ -36,8 +36,8 @@ public class Reader {
 	/// - Returns: A future that resolves to a channel or an error.
 	public func channel(from url: String, on eventLoop: EventLoop) -> EventLoopFuture<RSSChannelDescription> {
 		
-		Networking().download(from: url, on: eventLoop).map { (data) in
-			self.parse(data: data)
+		Networking().download(from: url, on: eventLoop).map { (result) in
+			self.parse(data: result.data)
 		}
 	}
 	
@@ -51,8 +51,8 @@ public class Reader {
 		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
 		
 		for future in dataFutures {
-			let channelFuture = future.map { (data) in
-				self.parse(data: data)
+			let channelFuture = future.map { (result) in
+				self.parse(data: result.data)
 			}
 			
 			channelFutures.append(channelFuture)
@@ -71,8 +71,8 @@ public class Reader {
 		var channelFutures: [EventLoopFuture<RSSChannelDescription>] = []
 
 		for future in dataFutures {
-			let channelFuture = future.map { (data) in
-				self.parse(data: data)
+			let channelFuture = future.map { (result) in
+				self.parse(data: result.data)
 			}
 
 			channelFutures.append(channelFuture)
