@@ -66,7 +66,7 @@ public class Networking {
 			}
 			
 			if let data = data {
-				let result = NetworkResult(url: path, data: data, response: response)
+				let result = NetworkResult(path: path, url: url, data: data, response: response)
 				promise.completeWith(.success(result))
 			}
 		}
