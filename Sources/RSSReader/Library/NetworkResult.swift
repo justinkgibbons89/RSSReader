@@ -2,7 +2,7 @@ import Foundation
 import NIO
 
 public struct NetworkResult {
-	var url: String
-	var data: Data
-	var response: URLResponse?
+	public var url: String
+	public var data: Data
+	public var response: URLResponse?
 }
