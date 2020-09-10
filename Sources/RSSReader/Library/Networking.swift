@@ -61,7 +61,7 @@ public class Networking {
 		let task = session.dataTask(with: url) { (data, response, error) in
 			
 			if let error = error {
-				print("Data task error: \(error)")
+				print("Couldn't download from url: \(url.absoluteString)")
 				promise.completeWith(.failure(NetworkingError.unknown))
 			}
 			
