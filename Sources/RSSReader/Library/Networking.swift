@@ -82,11 +82,11 @@ public class Networking {
 	///   - urls: The URLs of the resources to download.
 	///   - eventLoop: The event loop to resolve the futures on.
 	/// - Returns: The data objects, as a collection of futures.
-	public func download(urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
+	public func download(urls: [String], on eventLoop: EventLoop, v verbose: Bool = false) -> [EventLoopFuture<NetworkResult>] {
 		var results: [EventLoopFuture<NetworkResult>] = []
 		
 		for url in urls {
-			let request = download(from: url, on: eventLoop)
+			let request = download(from: url, on: eventLoop, v: verbose)
 			results.append(request)
 		}
 		
@@ -98,9 +98,9 @@ public class Networking {
 	///   - futureURL: The URL to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: The data from the given URL, as a future.
-	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop) -> EventLoopFuture<NetworkResult> {
+	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop, v verbose: Bool = false) -> EventLoopFuture<NetworkResult> {
 		futureURL.flatMap { (url) in
-			self.download(from: url, on: eventLoop)
+			self.download(from: url, on: eventLoop, v: verbose)
 		}
 	}
 	
@@ -109,9 +109,9 @@ public class Networking {
 	///   - futureURLs: The URLs to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: A collection of downloaded data, as futures.
-	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
+	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop, v verbose: Bool = false) -> [EventLoopFuture<NetworkResult>] {
 		futureURLs.map { (futureURL) -> EventLoopFuture<NetworkResult> in
-			self.download(futureURL, eventLoop: eventLoop)
+			self.download(futureURL, eventLoop: eventLoop, v: verbose)
 		}
 	}
 	
