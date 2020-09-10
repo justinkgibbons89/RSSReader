@@ -52,22 +52,21 @@ public class Networking {
 		let promise = eventLoop.makePromise(of: NetworkResult.self)
 		
 		guard let url = URL(string: path) else {
-			if verbose { print("Couldn't construct URL from path: \(path)"); }
-			promise.completeWith(.failure(NetworkingError.unknown))
+			let error = NetworkingError.invalidURL(path: path)
+			promise.completeWith(.failure(error))
 			return promise.futureResult
 		}
 		
 		
 		let task = session.dataTask(with: url) { (data, response, error) in
 			
-			if let error = error {
-				if verbose { print("Couldn't download from url: \(url.absoluteString)") }
+			if let nsError = error as NSError? {
+				let error = NetworkingError.dataTaskError(url: path, domain: nsError.domain)
 				promise.completeWith(.failure(error))
 			}
 			
 			if let data = data {
 				let result = NetworkResult(path: path, url: url, data: data, response: response)
-				if verbose { print("Downloaded from url: \(path)") }
 				promise.completeWith(.success(result))
 			}
 		}
@@ -82,11 +81,11 @@ public class Networking {
 	///   - urls: The URLs of the resources to download.
 	///   - eventLoop: The event loop to resolve the futures on.
 	/// - Returns: The data objects, as a collection of futures.
-	public func download(urls: [String], on eventLoop: EventLoop, v verbose: Bool = false) -> [EventLoopFuture<NetworkResult>] {
+	public func download(urls: [String], on eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
 		var results: [EventLoopFuture<NetworkResult>] = []
 		
 		for url in urls {
-			let request = download(from: url, on: eventLoop, v: verbose)
+			let request = download(from: url, on: eventLoop)
 			results.append(request)
 		}
 		
@@ -98,9 +97,9 @@ public class Networking {
 	///   - futureURL: The URL to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: The data from the given URL, as a future.
-	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop, v verbose: Bool = false) -> EventLoopFuture<NetworkResult> {
+	public func download(_ futureURL: EventLoopFuture<String>, eventLoop: EventLoop) -> EventLoopFuture<NetworkResult> {
 		futureURL.flatMap { (url) in
-			self.download(from: url, on: eventLoop, v: verbose)
+			self.download(from: url, on: eventLoop)
 		}
 	}
 	
@@ -109,9 +108,9 @@ public class Networking {
 	///   - futureURLs: The URLs to be downloaded.
 	///   - eventLoop: The event loop to perform work on.
 	/// - Returns: A collection of downloaded data, as futures.
-	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop, v verbose: Bool = false) -> [EventLoopFuture<NetworkResult>] {
+	public func download(_ futureURLs: [EventLoopFuture<String>], eventLoop: EventLoop) -> [EventLoopFuture<NetworkResult>] {
 		futureURLs.map { (futureURL) -> EventLoopFuture<NetworkResult> in
-			self.download(futureURL, eventLoop: eventLoop, v: verbose)
+			self.download(futureURL, eventLoop: eventLoop)
 		}
 	}
 	
@@ -125,8 +124,4 @@ public class Networking {
 		return session.dataTaskPublisher(for: url)
 	}
 	#endif
-}
-
-enum NetworkingError: Error {
-	case unknown
 }
