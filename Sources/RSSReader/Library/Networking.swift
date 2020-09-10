@@ -61,7 +61,7 @@ public class Networking {
 		let task = session.dataTask(with: url) { (data, response, error) in
 			
 			if let nsError = error as NSError? {
-				let error = NetworkingError.dataTaskError(url: path, domain: nsError.domain)
+				let error = NetworkingError.dataTaskError(url: path, description: nsError.localizedDescription)
 				promise.completeWith(.failure(error))
 			}
 			
