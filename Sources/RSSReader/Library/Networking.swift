@@ -52,7 +52,7 @@ public class Networking {
 		let promise = eventLoop.makePromise(of: NetworkResult.self)
 		
 		guard let url = URL(string: path) else {
-			let error = NetworkingError.invalidURL(path: path)
+			let error = NetworkingError.invalidURL(url: path)
 			promise.completeWith(.failure(error))
 			return promise.futureResult
 		}
@@ -61,7 +61,7 @@ public class Networking {
 		let task = session.dataTask(with: url) { (data, response, error) in
 			
 			if let nsError = error as NSError? {
-				let error = NetworkingError.dataTaskError(url: path, description: nsError.localizedDescription)
+				let error = NetworkingError.dataTaskFailed(url: path, description: nsError.localizedDescription)
 				promise.completeWith(.failure(error))
 			}
 			
