@@ -1,6 +1,6 @@
 import Foundation
 
-enum NetworkingError: Error {
+public enum NetworkingError: Error {
 	case unknown, invalidURL(path: String), dataTaskError(url: String, description: String)
 	
 	var localizedDescription: String {
