@@ -48,11 +48,11 @@ public class Networking {
 	///   - path: The URL to be downloaded from.
 	///   - eventLoop: The event loop to create the underlying promise on.
 	/// - Returns: A future which resolves into the downloaded data, or an error.
-	public func download(from path: String, on eventLoop: EventLoop) -> EventLoopFuture<NetworkResult> {
+	public func download(from path: String, on eventLoop: EventLoop, v verbose: Bool = false) -> EventLoopFuture<NetworkResult> {
 		let promise = eventLoop.makePromise(of: NetworkResult.self)
 		
 		guard let url = URL(string: path) else {
-			print("Couldn't construct URL from path: \(path)");
+			if verbose { print("Couldn't construct URL from path: \(path)"); }
 			promise.completeWith(.failure(NetworkingError.unknown))
 			return promise.futureResult
 		}
@@ -61,12 +61,13 @@ public class Networking {
 		let task = session.dataTask(with: url) { (data, response, error) in
 			
 			if let error = error {
-				print("Couldn't download from url: \(url.absoluteString)")
-				promise.completeWith(.failure(NetworkingError.unknown))
+				if verbose { print("Couldn't download from url: \(url.absoluteString)") }
+				promise.completeWith(.failure(error))
 			}
 			
 			if let data = data {
 				let result = NetworkResult(path: path, url: url, data: data, response: response)
+				if verbose { print("Downloaded from url: \(path)") }
 				promise.completeWith(.success(result))
 			}
 		}
