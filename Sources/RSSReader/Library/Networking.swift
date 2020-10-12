@@ -115,7 +115,7 @@ public class Networking {
 	}
 	
 	#if os(iOS)
-	@available(OSX 10.15, *)
+	@available(iOS 13, OSX 10.15, *)
 	func publisher(for path: String) -> URLSession.DataTaskPublisher? {
 		guard let url = URL(string: path) else {
 			print("Couldn't construct URL from path. Aborted."); return nil
