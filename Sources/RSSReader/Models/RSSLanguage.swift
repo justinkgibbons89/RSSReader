@@ -1,9 +1,10 @@
 import Foundation
 
-public enum RSSLanguage {
+public enum RSSLanguage: Int {
 	
-	case english
-	case unknown
+    case unknown = 0
+	case english = 1
+    case french = 2
 	
 	static func from(_ string: String?) -> RSSLanguage {
 		guard let languageString = string else {
